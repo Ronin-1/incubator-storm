@@ -176,7 +176,11 @@ public class MasterBatchCoordinator extends BaseRichSpout {
             if(_activeTx.size() < _maxTransactionActive) {
                 Long curr = _currTransaction;
                 for(int i=0; i<_maxTransactionActive; i++) {
-                    if(!_activeTx.containsKey(curr) && isReady(curr)) {
+                    if(!isReady(curr)) {
+                        // break out to ensure in-order txid creation
+                        break;
+                    }
+                    if(!_activeTx.containsKey(curr)) {
                         // by using a monotonically increasing attempt id, downstream tasks
                         // can be memory efficient by clearing out state for old attempts
                         // as soon as they see a higher attempt id for a transaction
