@@ -111,7 +111,7 @@ class Client implements IConnection {
     {
         int backoff = 1 << retries.get();
         int sleepMs = base_sleep_ms * Math.max(1, random.nextInt(backoff));
-        if ( sleepMs > max_sleep_ms )
+        if ( sleepMs > max_sleep_ms || sleepMs <= 0 )
             sleepMs = max_sleep_ms;
         return sleepMs;
     }
