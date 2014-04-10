@@ -238,16 +238,6 @@
                             <goal>compile</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>test-clojure</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test-with-junit</goal>
-                        </goals>
-                        <configuration>
-                            <vmargs>${test.extra.args}</vmargs>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
