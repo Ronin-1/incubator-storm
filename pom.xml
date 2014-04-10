@@ -162,10 +162,10 @@
     </modules>
 
     <scm>
-        <connection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-storm.git</connection>
-        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-storm.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/metamx/incubator-storm.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/metamx/incubator-storm.git</developerConnection>
+        <url>http://github.com/metamx/incubator-storm</url>
         <tag>HEAD</tag>
-        <url>https://git-wip-us.apache.org/repos/asf/incubator-storm</url>
     </scm>
 
     <issueManagement>
