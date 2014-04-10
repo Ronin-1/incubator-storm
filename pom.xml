@@ -280,12 +280,20 @@
 
     </profiles>
 
+    <repositories>
+        <repository>
+            <id>pub-libs</id>
+            <name>pub-libs-local</name>
+            <url>https://metamx.artifactoryonline.com/metamx/pub-libs-releases-local</url>
+        </repository>
+    </repositories>
+
     <distributionManagement>
-        <site>
-            <id>storm.maven.website</id>
-            <name>Storm Website</name>
-            <url>file:///tmp/site</url>
-        </site>
+        <repository>
+            <id>central-local</id>
+            <name>Central</name>
+            <url>https://metamx.artifactoryonline.com/metamx/pub-libs-releases-local</url>
+        </repository>
     </distributionManagement>
 
     <dependencyManagement>
@@ -504,29 +512,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <url>http://repo1.maven.org/maven2/</url>
-        </repository>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>clojars</id>
-            <url>https://clojars.org/repo/</url>
-        </repository>
-    </repositories>
 
     <build>
 
