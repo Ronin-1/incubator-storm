@@ -151,7 +151,7 @@ public class StormSubmitter {
         try {
             String uploadLocation = client.getClient().beginFileUpload();
             LOG.info("Uploading topology jar " + localJar + " to assigned location: " + uploadLocation);
-            BufferFileInputStream is = new BufferFileInputStream(localJar);
+            BufferFileInputStream is = new BufferFileInputStream(localJar, 524288);
             while(true) {
                 byte[] toSubmit = is.read();
                 if(toSubmit.length==0) break;

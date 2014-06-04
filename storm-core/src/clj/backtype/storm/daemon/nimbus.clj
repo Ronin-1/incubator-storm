@@ -1035,7 +1035,7 @@
           ))
 
       (^String beginFileDownload [this ^String file]
-        (let [is (BufferFileInputStream. file)
+        (let [is (BufferFileInputStream. file 524288)
               id (uuid)]
           (.put (:downloaders nimbus) id is)
           id
