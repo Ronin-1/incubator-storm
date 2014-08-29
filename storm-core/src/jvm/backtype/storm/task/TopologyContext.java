@@ -53,6 +53,8 @@ public class TopologyContext extends WorkerTopologyContext implements IMetricsCo
     private List<ITaskHook> _hooks = new ArrayList<ITaskHook>();
     private Map<String, Object> _executorData;
     private Map<Integer,Map<Integer, Map<String, IMetric>>> _registeredMetrics;
+    private Map<Integer,Map<Integer, Map<String, IMetric>>> _registeredExternalMetrics;
+    private boolean _useExternalMetrics;
     private clojure.lang.Atom _openOrPrepareWasCalled;
 
     
@@ -69,10 +71,12 @@ public class TopologyContext extends WorkerTopologyContext implements IMetricsCo
         _taskId = taskId;
         _executorData = executorData;
         _registeredMetrics = registeredMetrics;
+        _registeredExternalMetrics = new HashMap<Integer, Map<Integer, Map<String, IMetric>>>();
+        _useExternalMetrics = false;
         _openOrPrepareWasCalled = openOrPrepareWasCalled;
     }
 
-    /**
+  /**
      * All state from all subscribed state spouts streams will be synced with
      * the provided object.
      * 
@@ -208,7 +212,15 @@ public class TopologyContext extends WorkerTopologyContext implements IMetricsCo
     
     public Object getExecutorData(String name) {
         return _executorData.get(name);
-    }    
+    }
+
+    public boolean isUseExternalMetrics() {
+      return _useExternalMetrics;
+    }
+
+    public void setUseExternalMetrics(boolean useExternalMetrics) {
+      this._useExternalMetrics = useExternalMetrics;
+    }
     
     public void addTaskHook(ITaskHook hook) {
         hook.prepare(_stormConf, this);
@@ -218,8 +230,12 @@ public class TopologyContext extends WorkerTopologyContext implements IMetricsCo
     public Collection<ITaskHook> getHooks() {
         return _hooks;
     }
-    
-    @Override
+
+  public Map<Integer, Map<Integer, Map<String, IMetric>>> getRegisteredExternalMetrics() {
+    return _registeredExternalMetrics;
+  }
+
+  @Override
     public String toJSONString() {
         Map obj = new HashMap();
         obj.put("task->component", this.getTaskToComponent());
@@ -230,15 +246,18 @@ public class TopologyContext extends WorkerTopologyContext implements IMetricsCo
     }
 
     /*
-     * Register a IMetric instance. 
-     * Storm will then call getValueAndReset on the metric every timeBucketSizeInSecs
-     * and the returned value is sent to all metrics consumers.
-     * You must call this during IBolt::prepare or ISpout::open.
+     * Register a IMetric instance.
+     *
+     * If useExternalMetrics is set than Storm will then call getValueAndReset on the metric every timeBucketSizeInSecs
+     * and the returned value is sent to all metrics consumers. You must call this during IBolt::prepare or ISpout::open.
+     *
+     * Otherwise you should handle metrics yourself via registeredExternalMetrics.
+     *
      * @return The IMetric argument unchanged.
      */
     public <T extends IMetric> T registerMetric(String name, T metric, int timeBucketSizeInSecs) {
         if((Boolean)_openOrPrepareWasCalled.deref() == true) {
-            throw new RuntimeException("TopologyContext.registerMetric can only be called from within overridden " + 
+            throw new RuntimeException("TopologyContext.registerMetric can only be called from within overridden " +
                                        "IBolt::prepare() or ISpout::open() method.");
         }
 
@@ -251,7 +270,8 @@ public class TopologyContext extends WorkerTopologyContext implements IMetricsCo
                                                "greater than or equal to 1 second.");
         }
         
-        Map m1 = _registeredMetrics;
+        Map m1 = isUseExternalMetrics() ?_registeredExternalMetrics :_registeredMetrics;
+
         if(!m1.containsKey(timeBucketSizeInSecs)) {
             m1.put(timeBucketSizeInSecs, new HashMap());
         }
