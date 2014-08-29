@@ -231,9 +231,11 @@ public class TopologyContext extends WorkerTopologyContext implements IMetricsCo
         return _hooks;
     }
 
-  public Map<Integer, Map<Integer, Map<String, IMetric>>> getRegisteredExternalMetrics() {
-    return _registeredExternalMetrics;
-  }
+    public Map<Integer, Map<Integer, Map<String, IMetric>>> getAndResetRegisteredExternalMetrics() {
+      Map<Integer, Map<Integer, Map<String, IMetric>>> result = new HashMap<Integer, Map<Integer, Map<String, IMetric>>>(_registeredExternalMetrics);
+      _registeredExternalMetrics.clear();
+      return result;
+    }
 
   @Override
     public String toJSONString() {
