@@ -250,7 +250,7 @@ public class TopologyContext extends WorkerTopologyContext implements IMetricsCo
     /*
      * Register a IMetric instance.
      *
-     * If useExternalMetrics is set than Storm will then call getValueAndReset on the metric every timeBucketSizeInSecs
+     * If useExternalMetrics is not set than Storm will then call getValueAndReset on the metric every timeBucketSizeInSecs
      * and the returned value is sent to all metrics consumers. You must call this during IBolt::prepare or ISpout::open.
      *
      * Otherwise you should handle metrics yourself via registeredExternalMetrics.
