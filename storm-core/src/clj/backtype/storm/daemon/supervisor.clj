@@ -467,7 +467,7 @@
           jlp (jlp stormroot conf)
           stormjar (supervisor-stormjar-path stormroot)
           storm-conf (read-supervisor-storm-conf conf storm-id)
-          classpath (add-to-classpath (current-classpath) [stormjar])
+          classpath (add-to-classpath stormjar [(current-classpath)])
           worker-childopts (when-let [s (conf WORKER-CHILDOPTS)]
                              (substitute-worker-childopts s port))
           topo-worker-childopts (when-let [s (storm-conf TOPOLOGY-WORKER-CHILDOPTS)]
